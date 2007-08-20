@@ -11,8 +11,8 @@ Group:		System/Kernel and hardware
 Source0:	%name-%version.tar.bz2
 URL:		http://www.gnu.org/software/ddrescue/ddrescue.html
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
-Requires(post): /sbin/install-info
-Requires(postun): /sbin/install-info
+Requires(post): info-install
+Requires(postun): info-install
     
 %description
 GNU ddrescue is a data recovery tool. It copies data from one file or block 
