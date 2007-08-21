@@ -12,7 +12,7 @@ Source0:	%name-%version.tar.bz2
 URL:		http://www.gnu.org/software/ddrescue/ddrescue.html
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 Requires(post): info-install
-Requires(postun): info-install
+Requires(preun): info-install
     
 %description
 GNU ddrescue is a data recovery tool. It copies data from one file or block 
@@ -73,7 +73,7 @@ rm -rf $RPM_BUILD_ROOT
 %post
 %_install_info %{name}.info
 
-%postun
+%preun
 %_remove_install_info %{name}.info
 
 
