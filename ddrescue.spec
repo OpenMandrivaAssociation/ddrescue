@@ -1,6 +1,6 @@
 %define name	ddrescue
 %define version 1.3
-%define release %mkrel 1
+%define release %mkrel 2
 
 Summary:	GNU ddrescue is a data recovery tool
 Name:		%{name}
