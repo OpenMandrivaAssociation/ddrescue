@@ -10,6 +10,7 @@ License:	GPL
 Group:		System/Kernel and hardware
 Source0:	%name-%version.tar.bz2
 URL:		http://www.gnu.org/software/ddrescue/ddrescue.html
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 Requires(post): info-install
 Requires(preun): info-install
     
