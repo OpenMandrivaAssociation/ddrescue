@@ -29,7 +29,7 @@ If you use the logfile feature of ddrescue, the data is rescued very
 efficiently (only the needed blocks are read). Also you can interrupt the 
 rescue at any time and resume it later at the same point.
 
-Automatic merging of backups: If you have two or more damaged copies of a file, 
+Automatic merging of backups: If you have two or more damaged copies of a file,
 cdrom, etc, and run ddrescue on all of them, one at a time, with the same 
 output file, you will probably obtain a complete and error-free file. This is 
 so because the probability of having damaged areas at the same places on 
