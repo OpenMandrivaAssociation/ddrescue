@@ -1,6 +1,6 @@
 %define name	ddrescue
 %define version 1.6
-%define release %mkrel 1
+%define release %mkrel 2
 
 Summary:	Data recovery tool
 Name:		%{name}
