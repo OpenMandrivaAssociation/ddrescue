@@ -1,12 +1,12 @@
 %define name	ddrescue
-%define version 1.6
-%define release %mkrel 2
+%define version 1.7
+%define release %mkrel 1
 
 Summary:	Data recovery tool
 Name:		%{name}
 Version:	%{version}
 Release:	%{release}
-License:	GPL
+License:	GPLv3+
 Group:		System/Kernel and hardware
 Source0:	%name-%version.tar.bz2
 URL:		http://www.gnu.org/software/ddrescue/ddrescue.html
@@ -79,7 +79,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,0755) 
-%doc AUTHORS ChangeLog COPYING NEWS README
+%doc AUTHORS ChangeLog NEWS README
 %{_bindir}/*
 %{_infodir}/*
 %{_mandir}/*/*
