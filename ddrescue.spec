@@ -2,7 +2,7 @@
 %define version 1.6
 %define release %mkrel 1
 
-Summary:	GNU ddrescue is a data recovery tool
+Summary:	Data recovery tool
 Name:		%{name}
 Version:	%{version}
 Release:	%{release}
