@@ -1,5 +1,5 @@
 %define name	ddrescue
-%define version 1.9
+%define version 1.10
 %define release %mkrel 1
 
 Summary:	Data recovery tool
@@ -8,7 +8,8 @@ Version:	%{version}
 Release:	%{release}
 License:	GPLv3+
 Group:		System/Kernel and hardware
-Source0:	%name-%version.tar.bz2
+Source0:	http://ftp.gnu.org/gnu/ddrescue/%{name}-%{version}.tar.gz
+Patch0:		ddrescue-1.10-string-format.patch
 URL:		http://www.gnu.org/software/ddrescue/ddrescue.html
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 Requires(post): info-install
@@ -48,6 +49,7 @@ page size if page size is a multiple of sector size.
 
 %prep 
 %setup -q -n %name-%{version}
+%patch0 -p1 -b .strfmt
 
 %build
 
