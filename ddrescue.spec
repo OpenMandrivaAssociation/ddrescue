@@ -1,7 +1,6 @@
 %define name	ddrescue
 %define version 1.12
-%define betaver rc2
-%define release %mkrel -c %betaver 1
+%define release %mkrel 1
 
 Summary:	Data recovery tool
 Name:		%{name}
@@ -9,7 +8,7 @@ Version:	%{version}
 Release:	%{release}
 License:	GPLv3+
 Group:		System/Kernel and hardware
-Source0:	http://ftp.gnu.org/gnu/ddrescue/%{name}-%{version}-%{betaver}.tar.gz
+Source0:	http://ftp.gnu.org/gnu/ddrescue/%{name}-%{version}.tar.gz
 Patch0:		ddrescue-1.11-string-format.patch
 URL:		http://www.gnu.org/software/ddrescue/ddrescue.html
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -49,7 +48,7 @@ read from raw devices. For efficiency reasons, also aligns it to the memory
 page size if page size is a multiple of sector size. 
 
 %prep 
-%setup -q -n %name-%{version}-%{betaver}
+%setup -q 
 %patch0 -p1 -b .strfmt
 
 %build
