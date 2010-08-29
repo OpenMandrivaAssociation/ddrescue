@@ -1,5 +1,5 @@
 %define name	ddrescue
-%define version 1.12
+%define version 1.13
 %define release %mkrel 1
 
 Summary:	Data recovery tool
@@ -9,7 +9,6 @@ Release:	%{release}
 License:	GPLv3+
 Group:		System/Kernel and hardware
 Source0:	http://ftp.gnu.org/gnu/ddrescue/%{name}-%{version}.tar.gz
-Patch0:		ddrescue-1.11-string-format.patch
 URL:		http://www.gnu.org/software/ddrescue/ddrescue.html
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 Requires(post): info-install
@@ -49,19 +48,9 @@ page size if page size is a multiple of sector size.
 
 %prep 
 %setup -q 
-%patch0 -p1 -b .strfmt
 
 %build
-
-./configure  \
-        --program-prefix=%{?_program_prefix} \
-        --prefix=%{_prefix} \
-        --datadir=%{_datadir} \
-        --includedir=%{_includedir} \
-        --mandir=%{_mandir} \
-        --infodir=%{_infodir} \
-	CXXFLAGS="%{optflags}" LDFLAGS="%{?ldflags}"
-
+%configure2_5x CXXFLAGS="%{optflags}" LDFLAGS="%{?ldflags}"
 %make
 
 %install
@@ -77,13 +66,9 @@ rm -rf $RPM_BUILD_ROOT
 %preun
 %_remove_install_info %{name}.info
 
-
 %files
-%defattr(-,root,root,0755) 
+%defattr(-,root,root,)
 %doc AUTHORS ChangeLog README
 %{_bindir}/*
 %{_infodir}/*
 %{_mandir}/*/*
-
-
-
