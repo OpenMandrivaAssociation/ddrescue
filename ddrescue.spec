@@ -1,5 +1,5 @@
 %define name	ddrescue
-%define version 1.13
+%define version 1.14
 %define release %mkrel 1
 
 Summary:	Data recovery tool
