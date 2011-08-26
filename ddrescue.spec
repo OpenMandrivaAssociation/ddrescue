@@ -1,18 +1,13 @@
-%define name	ddrescue
-%define version 1.14
-%define release %mkrel 1
-
 Summary:	Data recovery tool
-Name:		%{name}
-Version:	%{version}
-Release:	%{release}
+Name:		ddrescue
+Version:	1.14
+Release:	1
 License:	GPLv3+
 Group:		System/Kernel and hardware
 Source0:	http://ftp.gnu.org/gnu/ddrescue/%{name}-%{version}.tar.gz
 URL:		http://www.gnu.org/software/ddrescue/ddrescue.html
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
-Requires(post): info-install
-Requires(preun): info-install
+Requires(post):	info-install
+Requires(preun):info-install
     
 %description
 GNU ddrescue is a data recovery tool. It copies data from one file or block 
@@ -54,20 +49,14 @@ page size if page size is a multiple of sector size.
 %make
 
 %install
-rm -rf $RPM_BUILD_ROOT
 %makeinstall_std
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-%post
 %_install_info %{name}.info
 
 %preun
 %_remove_install_info %{name}.info
 
 %files
-%defattr(-,root,root,)
 %doc AUTHORS ChangeLog README
 %{_bindir}/*
 %{_infodir}/*
