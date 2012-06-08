@@ -1,13 +1,11 @@
 Summary:	Data recovery tool
 Name:		ddrescue
 Version:	1.15
-Release:	1
+Release:	2
 License:	GPLv3+
 Group:		System/Kernel and hardware
 Source0:	http://ftp.gnu.org/gnu/ddrescue/%{name}-%{version}.tar.gz
 URL:		http://www.gnu.org/software/ddrescue/ddrescue.html
-Requires(post):	info-install
-Requires(preun):info-install
     
 %description
 GNU ddrescue is a data recovery tool. It copies data from one file or block 
@@ -41,8 +39,8 @@ Ddrescue aligns its I/O buffer to the sector size so that it can be used to
 read from raw devices. For efficiency reasons, also aligns it to the memory 
 page size if page size is a multiple of sector size. 
 
-%prep 
-%setup -q 
+%prep
+%setup -q
 
 %build
 %configure2_5x
@@ -50,12 +48,6 @@ page size if page size is a multiple of sector size.
 
 %install
 %makeinstall_std
-
-%post
-%_install_info %{name}.info
-
-%preun
-%_remove_install_info %{name}.info
 
 %files
 %doc AUTHORS ChangeLog README
