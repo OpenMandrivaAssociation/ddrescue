@@ -54,3 +54,91 @@ page size if page size is a multiple of sector size.
 %{_bindir}/*
 %{_infodir}/*
 %{_mandir}/*/*
+
+
+%changelog
+* Fri Jun 08 2012 Andrey Bondrov <abondrov@mandriva.org> 1.15-2
++ Revision: 803255
+- Drop some legacy junk
+
+* Thu Feb 23 2012 Dmitry Mikhirev <dmikhirev@mandriva.org> 1.15-1
++ Revision: 779361
+- update to 1.15
+
+* Fri Aug 26 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1.14-1
++ Revision: 697234
+- clean out legacy junk
+- new version
+
+* Sun Aug 29 2010 Funda Wang <fwang@mandriva.org> 1.13-1mdv2011.0
++ Revision: 574134
+- new version 1.13
+
+* Wed Apr 07 2010 Sandro Cazzaniga <kharec@mandriva.org> 1.12-1mdv2010.1
++ Revision: 532805
+- Final 1.12
+
+* Mon Feb 15 2010 Funda Wang <fwang@mandriva.org> 1.12-0.rc2.1mdv2010.1
++ Revision: 506199
+- 1.12 rc2
+
+* Mon Jul 13 2009 Frederik Himpe <fhimpe@mandriva.org> 1.11-1mdv2010.0
++ Revision: 395569
+- Update to new version 1.11
+- Rediff string format patch
+
+* Mon Feb 23 2009 Frederik Himpe <fhimpe@mandriva.org> 1.10-1mdv2009.1
++ Revision: 344291
+- Update to new version 1.10
+- Fix source URL
+- Build with -Werror=format-security
+
+* Thu Nov 20 2008 Frederik Himpe <fhimpe@mandriva.org> 1.9-1mdv2009.1
++ Revision: 305234
+- Update to new version 1.9
+
+* Wed Jul 23 2008 Thierry Vignaud <tv@mandriva.org> 1.8-3mdv2009.0
++ Revision: 243989
+- rebuild
+
+* Mon Feb 25 2008 Frederik Himpe <fhimpe@mandriva.org> 1.8-1mdv2008.1
++ Revision: 174941
+- New upstream version
+- Remove NEWS file: it contains nothing more than the changes of the
+  latest version, which is already included in the same concise way in
+  ChangeLog
+
+* Mon Feb 18 2008 Frederik Himpe <fhimpe@mandriva.org> 1.7-1mdv2008.1
++ Revision: 171934
+- New upstream version
+- New license policy
+
+* Mon Feb 18 2008 Thierry Vignaud <tv@mandriva.org> 1.6-2mdv2008.1
++ Revision: 170795
+- rebuild
+- fix "foobar is blabla" summary (=> "blabla") so that it looks nice in rpmdrake
+- fix description-line-too-long
+- kill re-definition of %%buildroot on Pixel's request
+
+  + Olivier Blin <blino@mandriva.org>
+    - restore BuildRoot
+
+* Wed Dec 12 2007 Emmanuel Andry <eandry@mandriva.org> 1.6-1mdv2008.1
++ Revision: 117616
+- New version
+
+* Thu Aug 23 2007 Thierry Vignaud <tv@mandriva.org> 1.3-2mdv2008.0
++ Revision: 69910
+- info file must be unregistered before being uninstalled
+- kill file require on info-install
+
+
+* Wed Dec 20 2006 Lenny Cartier <lenny@mandriva.com> 1.3-1mdv2007.0
++ Revision: 100455
+- Update to 1.3
+
+* Sun Aug 06 2006 Olivier Thauvin <nanardon@mandriva.org> 1.2-2mdv2007.0
++ Revision: 53220
+- rebuild
+- Import ddrescue
+
