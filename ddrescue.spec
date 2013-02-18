@@ -1,10 +1,7 @@
-%define _enable_debug_packages %{nil}
-%define debug_package          %{nil}
-
 Summary:	Data recovery tool
 Name:		ddrescue
 Version:	1.16
-Release:	1
+Release:	2
 License:	GPLv3+
 Group:		System/Kernel and hardware
 Source0:	http://ftp.gnu.org/gnu/ddrescue/%{name}-%{version}.tar.gz
@@ -47,7 +44,7 @@ page size if page size is a multiple of sector size.
 
 %build
 %configure2_5x
-%make
+%make CXXFLAGS="%{optflags}" LDFLAGS="%{ldflags}"
 
 %install
 %makeinstall_std
