@@ -1,3 +1,6 @@
+%define _enable_debug_packages %{nil}
+%define debug_package          %{nil}
+
 Summary:	Data recovery tool
 Name:		ddrescue
 Version:	1.16
