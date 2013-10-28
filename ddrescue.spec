@@ -86,7 +86,7 @@ page size if page size is a multiple of sector size.
 
 %prep
 %setup -q
-%patch0 -b .fputc
+%patch0 -b .fputc~
 
 %build
 export CONFIGURE_TOP="$PWD"
@@ -94,7 +94,7 @@ export CONFIGURE_TOP="$PWD"
 mkdir -p uclibc
 pushd uclibc
 %uclibc_configure
-%make CXXFLAGS="%{uclibc_cflags} -Wall -Wextra -Weffc++" LDFLAGS="%{ldflags}"
+%make CXXFLAGS="%{uclibc_cflags}" LDFLAGS="%{ldflags}"
 popd
 %endif
 
