@@ -90,3 +90,12 @@ index 557ba46..188121a 100644
      if( ch == '#' ) comment = true;
      else if( ch == '\n' || ch == EOF ) comment = false;
      }
+@@ -337,7 +337,7 @@ bool Logbook::update_logfile( const int
+       std::fflush( stderr );
+       while( true )
+         {
+-        const char c = std::tolower( std::fgetc( stdin ) );
++        const char c = std::tolower( fgetc( stdin ) );
+         if( c == '\r' || c == '\n' )
+           {
+           std::fprintf( stderr, "\n\n\n\n" );
