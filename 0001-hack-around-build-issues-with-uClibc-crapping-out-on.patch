@@ -79,3 +79,14 @@ index 557ba46..188121a 100644
 -- 
 1.8.3.2
 
+--- ddrescue-1.17/logbook.cc~	2013-10-28 23:15:38.931694140 +0100
++++ ddrescue-1.17/logbook.cc	2013-10-28 23:15:50.261849073 +0100
+@@ -52,7 +52,7 @@ int my_fgetc( FILE * const f )
+   bool comment = false;
+ 
+   do {
+-    ch = std::fgetc( f );
++    ch = fgetc( f );
+     if( ch == '#' ) comment = true;
+     else if( ch == '\n' || ch == EOF ) comment = false;
+     }
