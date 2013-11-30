@@ -3,7 +3,7 @@
 Summary:	Data recovery tool
 Name:		ddrescue
 Version:	1.17
-Release:	2
+Release:	2.1
 License:	GPLv3+
 Group:		System/Kernel and hardware
 Source0:	http://ftp.gnu.org/gnu/ddrescue/%{name}-%{version}.tar.lz
