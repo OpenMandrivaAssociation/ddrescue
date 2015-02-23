@@ -2,8 +2,8 @@
 
 Summary:	Data recovery tool
 Name:		ddrescue
-Version:	1.17
-Release:	3
+Version:	1.19
+Release:	1
 License:	GPLv3+
 Group:		System/Kernel and hardware
 Source0:	http://ftp.gnu.org/gnu/ddrescue/%{name}-%{version}.tar.lz
@@ -93,6 +93,7 @@ export CONFIGURE_TOP="$PWD"
 %if %{with uclibc}
 mkdir -p uclibc
 pushd uclibc
+%global uclibc_cxx %{uclibc_cxx} -std=gnu++11
 %uclibc_configure
 %make CXXFLAGS="%{uclibc_cflags}" LDFLAGS="%{ldflags}"
 popd

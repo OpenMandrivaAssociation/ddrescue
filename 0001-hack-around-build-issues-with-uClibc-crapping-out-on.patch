@@ -1,51 +1,6 @@
-From d5ba7950cbf45be3e49fae9401dc5f6200afd555 Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?Per=20=C3=98yvind=20Karlsen=20=28proyvind=29?=
- <proyvind@moondrake.net>
-Date: Mon, 28 Oct 2013 22:27:48 +0100
-Subject: [PATCH] hack around build issues with uClibc++ crapping out on
- std::fputc
-
-For some really strange reason, std::fputc breaks when building
-against uClibc++, yet works outside of the std:: namespace.
-I need to investigate this in uClibc++ at a later timer
----
- fillbook.cc   | 2 +-
- genbook.cc    | 2 +-
- io.cc         | 4 ++--
- rescuebook.cc | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/fillbook.cc b/fillbook.cc
-index d189f0a..fe6e4c2 100644
---- a/fillbook.cc
-+++ b/fillbook.cc
-@@ -111,7 +111,7 @@ int Fillbook::do_fill( const int odes, const std::string & filltypes )
-     if( retval == 0 ) std::printf( "Finished" );
-     else if( retval == -2 ) std::printf( "\nLogfile error" );
-     else if( retval < 0 ) std::printf( "\nInterrupted by user" );
--    std::fputc( '\n', stdout );
-+    fputc( '\n', stdout );
-     }
-   if( retval == -2 ) retval = 1;		// logfile error
-   else
-diff --git a/genbook.cc b/genbook.cc
-index fecb5da..5c16a88 100644
---- a/genbook.cc
-+++ b/genbook.cc
-@@ -101,7 +101,7 @@ int Genbook::do_generate( const int odes )
-     show_status( -1, (retval ? 0 : "Finished"), true );
-     if( retval == -2 ) std::printf( "\nLogfile error" );
-     else if( retval < 0 ) std::printf( "\nInterrupted by user" );
--    std::fputc( '\n', stdout );
-+    fputc( '\n', stdout );
-     }
-   if( retval == -2 ) retval = 1;		// logfile error
-   else
-diff --git a/io.cc b/io.cc
-index e3efab4..4691431 100644
---- a/io.cc
-+++ b/io.cc
-@@ -218,7 +218,7 @@ void Genbook::show_status( const long long ipos, const char * const msg,
+--- ddrescue-1.19/fillbook.cc.fputc~	2014-08-31 13:55:05.000000000 +0200
++++ ddrescue-1.19/fillbook.cc	2015-02-23 15:10:04.739411446 +0100
+@@ -110,7 +110,7 @@ void Fillbook::show_status( const long l
      if( msg && msg[0] )
        {
        const int len = std::strlen( msg ); std::printf( "\r%s", msg );
@@ -54,7 +9,157 @@ index e3efab4..4691431 100644
        oldlen = len;
        }
      std::fflush( stdout );
-@@ -342,7 +342,7 @@ void Rescuebook::show_status( const long long ipos, const char * const msg,
+@@ -163,7 +163,7 @@ int Fillbook::do_fill( const int odes, c
+     show_status( -1, ( retval || signaled ) ? 0 : "Finished", true );
+     if( retval == -2 ) std::printf( "\nLogfile error" );
+     else if( signaled ) std::printf( "\nInterrupted by user" );
+-    std::fputc( '\n', stdout );
++    fputc( '\n', stdout );
+     }
+   if( retval == -2 ) retval = 1;		// logfile error
+   else
+--- ddrescue-1.19/genbook.cc.fputc~	2014-08-31 13:55:05.000000000 +0200
++++ ddrescue-1.19/genbook.cc	2015-02-23 15:10:04.740411605 +0100
+@@ -103,7 +103,7 @@ void Genbook::show_status( const long lo
+     if( msg && msg[0] )
+       {
+       const int len = std::strlen( msg ); std::printf( "\r%s", msg );
+-      for( int i = len; i < oldlen; ++i ) std::fputc( ' ', stdout );
++      for( int i = len; i < oldlen; ++i ) fputc( ' ', stdout );
+       oldlen = len;
+       }
+     std::fflush( stdout );
+@@ -147,7 +147,7 @@ int Genbook::do_generate( const int odes
+     show_status( -1, ( retval || signaled ) ? 0 : "Finished", true );
+     if( retval == -2 ) std::printf( "\nLogfile error" );
+     else if( signaled ) std::printf( "\nInterrupted by user" );
+-    std::fputc( '\n', stdout );
++    fputc( '\n', stdout );
+     }
+   if( retval == -2 ) retval = 1;		// logfile error
+   else
+--- ddrescue-1.19/logbook.cc.fputc~	2015-02-23 15:26:33.490240474 +0100
++++ ddrescue-1.19/logbook.cc	2015-02-23 15:44:05.497018750 +0100
+@@ -18,6 +18,7 @@
+ #define _FILE_OFFSET_BITS 64
+ 
+ #include <algorithm>
++#include <cctype>
+ #include <cerrno>
+ #include <climits>
+ #include <cstdio>
+@@ -111,7 +112,7 @@ bool Logbook::update_logfile( const int
+     std::fflush( stderr );
+     while( true )
+       {
+-      const char c = std::tolower( std::fgetc( stdin ) );
++      const char c = std::tolower( fgetc( stdin ) );
+       if( c == '\r' || c == '\n' || c == 'q' )
+         { std::fprintf( stderr, "\n\n\n\n" );
+           if( c == 'q' ) return false; else break; }
+--- ddrescue-1.19/logfile.cc.fputc~	2015-02-23 15:26:43.817668209 +0100
++++ ddrescue-1.19/logfile.cc	2015-02-23 15:26:45.427583569 +0100
+@@ -31,9 +31,9 @@ namespace {
+ 
+ int my_fgetc( FILE * const f )
+   {
+-  int ch = std::fgetc( f );
++  int ch = fgetc( f );
+   if( ch == '#' )			// comment
+-    { do ch = std::fgetc( f ); while( ch != '\n' && ch != EOF ); }
++    { do ch = fgetc( f ); while( ch != '\n' && ch != EOF ); }
+   return ch;
+   }
+ 
+@@ -220,7 +220,7 @@ bool Logfile::read_logfile( const int de
+         { show_logfile_error( filename_, linenum ); std::exit( 2 ); }
+       }
+     }
+-  if( std::ferror( f ) )
++  if( ferror( f ) )
+     { show_logfile_error( filename_, linenum ); std::exit( 2 ); }
+   if( std::freopen( filename_, "r+", f ) ) std::fclose( f );
+   else read_only_ = true;
+--- ddrescue-1.19/main.cc.fputc~	2015-02-23 15:26:12.371574653 +0100
++++ ddrescue-1.19/main.cc	2015-02-23 15:27:45.282229206 +0100
+@@ -380,7 +380,7 @@ bool user_agrees_ids( const Rescuebook &
+   about_to_copy( rescuebook, iname, oname, ides, true );
+   std::printf( "Proceed (y/N)? " );
+   std::fflush( stdout );
+-  return ( std::tolower( std::fgetc( stdin ) ) == 'y' );
++  return ( std::tolower( fgetc( stdin ) ) == 'y' );
+   }
+ 
+ 
+@@ -486,7 +486,7 @@ int do_rescue( const long long offset, D
+       if( rescuebook.max_retries >= 0 )
+         { nl = true;
+           std::printf( "Max retry passes: %d    ", rescuebook.max_retries ); }
+-      if( nl ) { nl = false; std::fputc( '\n', stdout ); }
++      if( nl ) { nl = false; fputc( '\n', stdout ); }
+ 
+       if( rescuebook.min_read_rate == 0 )
+         { nl = true; std::printf( "Min read rate: auto    " ); }
+@@ -499,20 +499,20 @@ int do_rescue( const long long offset, D
+       if( rescuebook.timeout >= 0 )
+         { nl = true; std::printf( "Timeout: %s",
+                                   format_time( rescuebook.timeout ) ); }
+-      if( nl ) { nl = false; std::fputc( '\n', stdout ); }
++      if( nl ) { nl = false; fputc( '\n', stdout ); }
+ 
+       std::printf( "Direct: %s    ", rescuebook.o_direct ? "yes" : "no" );
+       std::printf( "Sparse: %s    ", rescuebook.sparse ? "yes" : "no" );
+       std::printf( "Trim: %s    ", !rescuebook.notrim ? "yes" : "no" );
+       std::printf( "Scrape: %s    ", !rescuebook.noscrape ? "yes" : "no" );
+       std::printf( "Truncate: %s    ", o_trunc ? "yes" : "no" );
+-      std::fputc( '\n', stdout );
++      fputc( '\n', stdout );
+       if( rescuebook.complete_only )
+         { nl = true; std::printf( "Complete only    " ); }
+       if( rescuebook.reverse ) { nl = true; std::printf( "Reverse mode" ); }
+-      if( nl ) { nl = false; std::fputc( '\n', stdout ); }
++      if( nl ) { nl = false; fputc( '\n', stdout ); }
+       }
+-    std::fputc( '\n', stdout );
++    fputc( '\n', stdout );
+     }
+   return rescuebook.do_rescue( ides, odes );
+   }
+--- ddrescue-1.19/rescuebook.cc.fputc~	2014-10-03 16:54:06.000000000 +0200
++++ ddrescue-1.19/rescuebook.cc	2015-02-23 15:10:04.740411605 +0100
+@@ -481,7 +481,7 @@ void Rescuebook::update_rates( const boo
+       {
+       std::printf( "\n\n\n" );
+       if( preview_lines > 0 )
+-        for( int i = -2; i < preview_lines; ++i ) std::fputc( '\n', stdout );
++        for( int i = -2; i < preview_lines; ++i ) fputc( '\n', stdout );
+       }
+     }
+ 
+@@ -538,18 +538,18 @@ void Rescuebook::show_status( const long
+             std::printf( "%010llX ", ( iobuf_ipos + ( 16 * i ) ) & 0xFFFFFFFFFFLL );
+             for( int j = 0; j < 16; ++j )
+               { std::printf( " %02X", p[j] );
+-                if( j == 7 ) std::fputc( ' ', stdout ); }
++                if( j == 7 ) fputc( ' ', stdout ); }
+             std::printf( "  " );
+             for( int j = 0; j < 16; ++j )
+-              std::fputc( std::isprint( p[j] ) ? p[j] : '.', stdout );
+-            std::fputc( '\n', stdout );
++              fputc( std::isprint( p[j] ) ? p[j] : '.', stdout );
++            fputc( '\n', stdout );
+             }
+           else if( i == ( preview_lines - 1 ) / 2 )
+             std::printf( "                            No data available                                 \n" );
+           else
+             std::printf( "                                                                              \n" );
+           }
+-        std::fputc( '\n', stdout );
++        fputc( '\n', stdout );
+         }
+       std::printf( "rescued: %10sB,  errsize:%9sB,  current rate: %9sB/s\n",
+                    format_num( recsize ), format_num( errsize, 99999 ),
+@@ -563,7 +563,7 @@ void Rescuebook::show_status( const long
        if( msg && msg[0] && !errors_or_timeout() )
          {
          const int len = std::strlen( msg ); std::printf( "\r%s", msg );
@@ -63,11 +168,7 @@ index e3efab4..4691431 100644
          oldlen = len;
          }
        std::fflush( stdout );
-diff --git a/rescuebook.cc b/rescuebook.cc
-index 557ba46..188121a 100644
---- a/rescuebook.cc
-+++ b/rescuebook.cc
-@@ -648,7 +648,7 @@ int Rescuebook::do_rescue( const int ides, const int odes, const bool reverse )
+@@ -701,7 +701,7 @@ int Rescuebook::do_rescue( const int ide
        if( e_code & 2 ) std::printf( "\nToo many errors in input file" );
        if( e_code & 4 ) std::printf( "\nTimeout expired" );
        }
@@ -76,26 +177,3 @@ index 557ba46..188121a 100644
      }
    if( retval == -2 ) retval = 1;		// logfile error
    else
--- 
-1.8.3.2
-
---- ddrescue-1.17/logbook.cc~	2013-10-28 23:15:38.931694140 +0100
-+++ ddrescue-1.17/logbook.cc	2013-10-28 23:15:50.261849073 +0100
-@@ -52,7 +52,7 @@ int my_fgetc( FILE * const f )
-   bool comment = false;
- 
-   do {
--    ch = std::fgetc( f );
-+    ch = fgetc( f );
-     if( ch == '#' ) comment = true;
-     else if( ch == '\n' || ch == EOF ) comment = false;
-     }
-@@ -337,7 +337,7 @@ bool Logbook::update_logfile( const int
-       std::fflush( stderr );
-       while( true )
-         {
--        const char c = std::tolower( std::fgetc( stdin ) );
-+        const char c = std::tolower( fgetc( stdin ) );
-         if( c == '\r' || c == '\n' )
-           {
-           std::fprintf( stderr, "\n\n\n\n" );
