@@ -1,0 +1,101 @@
+From d5ba7950cbf45be3e49fae9401dc5f6200afd555 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Per=20=C3=98yvind=20Karlsen=20=28proyvind=29?=
+ <proyvind@moondrake.net>
+Date: Mon, 28 Oct 2013 22:27:48 +0100
+Subject: [PATCH] hack around build issues with uClibc++ crapping out on
+ std::fputc
+
+For some really strange reason, std::fputc breaks when building
+against uClibc++, yet works outside of the std:: namespace.
+I need to investigate this in uClibc++ at a later timer
+---
+ fillbook.cc   | 2 +-
+ genbook.cc    | 2 +-
+ io.cc         | 4 ++--
+ rescuebook.cc | 2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/fillbook.cc b/fillbook.cc
+index d189f0a..fe6e4c2 100644
+--- a/fillbook.cc
++++ b/fillbook.cc
+@@ -111,7 +111,7 @@ int Fillbook::do_fill( const int odes, const std::string & filltypes )
+     if( retval == 0 ) std::printf( "Finished" );
+     else if( retval == -2 ) std::printf( "\nLogfile error" );
+     else if( retval < 0 ) std::printf( "\nInterrupted by user" );
+-    std::fputc( '\n', stdout );
++    fputc( '\n', stdout );
+     }
+   if( retval == -2 ) retval = 1;		// logfile error
+   else
+diff --git a/genbook.cc b/genbook.cc
+index fecb5da..5c16a88 100644
+--- a/genbook.cc
++++ b/genbook.cc
+@@ -101,7 +101,7 @@ int Genbook::do_generate( const int odes )
+     show_status( -1, (retval ? 0 : "Finished"), true );
+     if( retval == -2 ) std::printf( "\nLogfile error" );
+     else if( retval < 0 ) std::printf( "\nInterrupted by user" );
+-    std::fputc( '\n', stdout );
++    fputc( '\n', stdout );
+     }
+   if( retval == -2 ) retval = 1;		// logfile error
+   else
+diff --git a/io.cc b/io.cc
+index e3efab4..4691431 100644
+--- a/io.cc
++++ b/io.cc
+@@ -218,7 +218,7 @@ void Genbook::show_status( const long long ipos, const char * const msg,
+     if( msg && msg[0] )
+       {
+       const int len = std::strlen( msg ); std::printf( "\r%s", msg );
+-      for( int i = len; i < oldlen; ++i ) std::fputc( ' ', stdout );
++      for( int i = len; i < oldlen; ++i ) fputc( ' ', stdout );
+       oldlen = len;
+       }
+     std::fflush( stdout );
+@@ -342,7 +342,7 @@ void Rescuebook::show_status( const long long ipos, const char * const msg,
+       if( msg && msg[0] && !errors_or_timeout() )
+         {
+         const int len = std::strlen( msg ); std::printf( "\r%s", msg );
+-        for( int i = len; i < oldlen; ++i ) std::fputc( ' ', stdout );
++        for( int i = len; i < oldlen; ++i ) fputc( ' ', stdout );
+         oldlen = len;
+         }
+       std::fflush( stdout );
+diff --git a/rescuebook.cc b/rescuebook.cc
+index 557ba46..188121a 100644
+--- a/rescuebook.cc
++++ b/rescuebook.cc
+@@ -648,7 +648,7 @@ int Rescuebook::do_rescue( const int ides, const int odes, const bool reverse )
+       if( e_code & 2 ) std::printf( "\nToo many errors in input file" );
+       if( e_code & 4 ) std::printf( "\nTimeout expired" );
+       }
+-    std::fputc( '\n', stdout );
++    fputc( '\n', stdout );
+     }
+   if( retval == -2 ) retval = 1;		// logfile error
+   else
+-- 
+1.8.3.2
+
+--- ddrescue-1.17/logbook.cc~	2013-10-28 23:15:38.931694140 +0100
++++ ddrescue-1.17/logbook.cc	2013-10-28 23:15:50.261849073 +0100
+@@ -52,7 +52,7 @@ int my_fgetc( FILE * const f )
+   bool comment = false;
+ 
+   do {
+-    ch = std::fgetc( f );
++    ch = fgetc( f );
+     if( ch == '#' ) comment = true;
+     else if( ch == '\n' || ch == EOF ) comment = false;
+     }
+@@ -337,7 +337,7 @@ bool Logbook::update_logfile( const int
+       std::fflush( stderr );
+       while( true )
+         {
+-        const char c = std::tolower( std::fgetc( stdin ) );
++        const char c = std::tolower( fgetc( stdin ) );
+         if( c == '\r' || c == '\n' )
+           {
+           std::fprintf( stderr, "\n\n\n\n" );
