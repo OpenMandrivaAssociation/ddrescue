@@ -1,20 +1,14 @@
-%bcond_without	uclibc
-
 Summary:	Data recovery tool
 Name:		ddrescue
-Version:	1.19
+Version:	1.22
 Release:	1
 License:	GPLv3+
 Group:		System/Kernel and hardware
 Source0:	http://ftp.gnu.org/gnu/ddrescue/%{name}-%{version}.tar.lz
-Patch0:		0001-hack-around-build-issues-with-uClibc-crapping-out-on.patch
 # for this stupid, almost none used format with lzma algorithm trying to compete with xz
-# utils... 
+# utils...
 BuildRequires:	lzip
 URL:		http://www.gnu.org/software/ddrescue/ddrescue.html
-%if %{with uclibc}
-BuildRequires:	uClibc-devel uClibc++-devel
-%endif
 
 %description
 GNU ddrescue is a data recovery tool. It copies data from one file or block 
@@ -48,77 +42,18 @@ Ddrescue aligns its I/O buffer to the sector size so that it can be used to
 read from raw devices. For efficiency reasons, also aligns it to the memory 
 page size if page size is a multiple of sector size. 
 
-%package -n	uclibc-%{name}
-Summary:	Data recovery tool (uClibc build)
-Group:		System/Kernel and hardware
-
-%description -n	uclibc-%{name}
-GNU ddrescue is a data recovery tool. It copies data from one file or block 
-device (hard disc, cdrom, etc) to another, trying hard to rescue data in 
-case of read errors.
-
-Ddrescue does not truncate the output file if not asked to. So, every time 
-you run it on the same output file, it tries to fill in the gaps.
-
-The basic operation of ddrescue is fully automatic. That is, you don't have 
-to wait for an error, stop the program, read the log, run it in reverse mode.
-
-If you use the logfile feature of ddrescue, the data is rescued very 
-efficiently (only the needed blocks are read). Also you can interrupt the 
-rescue at any time and resume it later at the same point.
-
-Automatic merging of backups: If you have two or more damaged copies of a file,
-cdrom, etc, and run ddrescue on all of them, one at a time, with the same 
-output file, you will probably obtain a complete and error-free file. This is 
-so because the probability of having damaged areas at the same places on 
-different input files is very low. Using the logfile, only the needed blocks 
-are read from the second and successive copies.
-
-The logfile is periodically saved to disc. So in case of a crash you can 
-resume the rescue with little recopying.
-
-Also, the same logfile can be used for multiple commands that copy different 
-areas of the file, and for multiple recovery attempts over different subsets.
-
-Ddrescue aligns its I/O buffer to the sector size so that it can be used to 
-read from raw devices. For efficiency reasons, also aligns it to the memory 
-page size if page size is a multiple of sector size. 
-
 %prep
 %setup -q
-%patch0 -b .fputc~
 
 %build
-export CONFIGURE_TOP="$PWD"
-%if %{with uclibc}
-mkdir -p uclibc
-pushd uclibc
-%global uclibc_cxx %{uclibc_cxx} -std=gnu++11
-%uclibc_configure
-%make CXXFLAGS="%{uclibc_cflags}" LDFLAGS="%{ldflags}"
-popd
-%endif
-
-mkdir -p glibc
-pushd glibc
 %configure
 %make CXXFLAGS="%{optflags}" LDFLAGS="%{ldflags}"
-popd
 
 %install
-%if %{with uclibc}
-%makeinstall_std -C uclibc
-%endif
-
-%makeinstall_std -C glibc
+%makeinstall_std
 
 %files
-%doc AUTHORS ChangeLog README
+%doc AUTHORS README
 %{_bindir}/*
 %{_infodir}/*
 %{_mandir}/*/*
-
-%if %{with uclibc}
-%files -n uclibc-%{name}
-%{uclibc_root}%{_bindir}/*
-%endif
