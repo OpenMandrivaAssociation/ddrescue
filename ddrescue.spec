@@ -1,6 +1,6 @@
 Summary:	Data recovery tool
 Name:		ddrescue
-Version:	1.24
+Version:	1.25
 Release:	1
 License:	GPLv3+
 Group:		System/Kernel and hardware
@@ -47,10 +47,10 @@ page size if page size is a multiple of sector size.
 
 %build
 %configure
-%make CXXFLAGS="%{optflags}" LDFLAGS="%{ldflags}"
+%make_build CXXFLAGS="%{optflags}" LDFLAGS="%{ldflags}"
 
 %install
-%makeinstall_std
+%make_install
 
 %files
 %doc AUTHORS README
