@@ -1,14 +1,12 @@
 Summary:	Data recovery tool
 Name:		ddrescue
-Version:	1.25
+Version:	1.26
 Release:	1
 License:	GPLv3+
 Group:		System/Kernel and hardware
-Source0:	http://ftp.gnu.org/gnu/ddrescue/%{name}-%{version}.tar.lz
-# for this stupid, almost none used format with lzma algorithm trying to compete with xz
-# utils...
-BuildRequires:	lzip
 URL:		http://www.gnu.org/software/ddrescue/ddrescue.html
+Source0:	http://ftp.gnu.org/gnu/ddrescue/%{name}-%{version}.tar.lz
+BuildRequires:	lzip
 
 %description
 GNU ddrescue is a data recovery tool. It copies data from one file or block 
