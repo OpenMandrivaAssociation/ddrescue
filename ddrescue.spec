@@ -1,6 +1,6 @@
 Summary:	Data recovery tool
 Name:		ddrescue
-Version:	1.26
+Version:	1.27
 Release:	1
 License:	GPLv3+
 Group:		System/Kernel and hardware
