@@ -6,6 +6,11 @@ License:	GPLv3+
 Group:		System/Kernel and hardware
 URL:		https://www.gnu.org/software/ddrescue/ddrescue.html
 Source0:	https://ftp.gnu.org/gnu/ddrescue/%{name}-%{version}.tar.lz
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
+BuildRequires:	make
 BuildRequires:	lzip
 
 %description
